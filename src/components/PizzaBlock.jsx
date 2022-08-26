@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 const PizzaBlock = ({ title, price, imageUrl, sizes, types }) => {
   const [activeType, setActiveType] = useState(0);
@@ -12,18 +12,20 @@ const PizzaBlock = ({ title, price, imageUrl, sizes, types }) => {
         <ul>
           {types.map((type) => (
             <li
+              key={type}
               onClick={() => setActiveType(type)}
-              className={activeType === type ? "active" : ""}
+              className={activeType === type ? 'active' : ''}
             >
-              {type === 0 ? "тонкое" : "традиционное"}
+              {type === 0 ? 'тонкое' : 'традиционное'}
             </li>
           ))}
         </ul>
         <ul>
           {sizes.map((size, index) => (
             <li
+              key={index}
               onClick={() => setActiveSize(index)}
-              className={activeSize === index ? "active" : ""}
+              className={activeSize === index ? 'active' : ''}
             >
               {size} см.
             </li>
