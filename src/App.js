@@ -1,18 +1,18 @@
 import './scss/app.scss';
-import Header from './components/Header';
+/* import Header from './components/Header';
 import Home from './pages/Home';
 import Cart from './pages/Cart';
 import NotFound from './pages/NotFound';
-import { Route, Routes } from 'react-router-dom';
-import { createContext, useState } from 'react';
+import { Route, Routes } from 'react-router-dom'; */
+/* import { createContext useState } from 'react'; */
 import { useDispatch, useSelector } from 'react-redux';
 import { decrement, increment } from './redux/slices/filterSlice';
 
-export const SearchContext = createContext();
+/* export const SearchContext = createContext(); */
 
 function App() {
-  const [searchValue, setSearchValue] = useState('');
-  const dispatch = useDispatch;
+  /* const [searchValue, setSearchValue] = useState(''); */
+  const dispatch = useDispatch();
   const filter = useSelector((state) => state.filter.value);
   return (
     <div className="App">
