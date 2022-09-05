@@ -1,8 +1,16 @@
-import { useContext } from 'react';
-import { SearchContext } from '../../App';
-import styles from './Search.module.scss';
+import { useContext, useRef } from "react";
+import { SearchContext } from "../../App";
+import { debounce } from "lodash.debounce";
+
+import styles from "./Search.module.scss";
+
 const Search = () => {
   const { searchValue, setSearchValue } = useContext(SearchContext);
+  const inputRef = useRef();
+  const onClickClear = () => {
+    setSearchValue("");
+    inputRef.current.focus();
+  };
   return (
     <div className={styles.root}>
       <svg
@@ -16,6 +24,7 @@ const Search = () => {
         </g>
       </svg>
       <input
+        ref={inputRef}
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
         className={styles.input}
@@ -23,7 +32,7 @@ const Search = () => {
       />
       {searchValue && (
         <svg
-          onClick={() => setSearchValue('')}
+          onClick={() => onClickClear()}
           className={styles.clearIcon}
           height="512px"
           id="Layer_1"

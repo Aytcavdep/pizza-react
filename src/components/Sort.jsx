@@ -1,19 +1,23 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setSort } from "../redux/slices/filterSlice";
 
-const Sort = ({ value, onChangeSort }) => {
+const sortList = [
+  { name: "популярности (убыв.)", sortProperty: "rating", sort: "desc" },
+  { name: "популярности (возр.)", sortProperty: "rating", sort: "asc" },
+  { name: "цене (убыв.)", sortProperty: "price", sort: "desc" },
+  { name: "цене (возр.)", sortProperty: "price", sort: "asc" },
+  { name: "алфавиту (убыв.)", sortProperty: "title", sort: "desc" },
+  { name: "алфавиту (возр.)", sortProperty: "title", sort: "asc" }
+];
+
+const Sort = () => {
+  const dispath = useDispatch();
+  const sort = useSelector((state) => state.filter.sort);
   const [isOpenPopup, setISOpenPopup] = useState(false);
 
-  const sortList = [
-    { name: "популярности (убыв.)", sortProperty: "rating", sort: "desc" },
-    { name: "популярности (возр.)", sortProperty: "rating", sort: "asc" },
-    { name: "цене (убыв.)", sortProperty: "price", sort: "desc" },
-    { name: "цене (возр.)", sortProperty: "price", sort: "asc" },
-    { name: "алфавиту (убыв.)", sortProperty: "title", sort: "desc" },
-    { name: "алфавиту (возр.)", sortProperty: "title", sort: "asc" }
-  ];
-
-  const changeActiveSort = (sortProperty, index) => {
-    onChangeSort(sortProperty);
+  const changeActiveSort = (obj) => {
+    dispath(setSort(obj));
     setISOpenPopup(false);
   };
   return (
@@ -32,9 +36,7 @@ const Sort = ({ value, onChangeSort }) => {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setISOpenPopup((prev) => !prev)}>
-          {value.name}
-        </span>
+        <span onClick={() => setISOpenPopup((prev) => !prev)}>{sort.name}</span>
       </div>
       {isOpenPopup && (
         <div className="sort__popup">
@@ -43,7 +45,7 @@ const Sort = ({ value, onChangeSort }) => {
               <li
                 key={index}
                 onClick={() => changeActiveSort(obj)}
-                className={value.name === obj.sortProperty ? "active" : ""}
+                className={sort.name === obj.sortProperty ? "active" : ""}
               >
                 {obj.name}
               </li>
