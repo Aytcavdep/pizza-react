@@ -1,22 +1,32 @@
 import Categories from "../components/Categories";
-import Sort from "../components/Sort";
+import Sort, { sortList } from "../components/Sort";
 import PizzaBlock from "../components/PizzaBlock";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import Skeleton from "../components/PizzaBlock/Skeleton";
 import Pagination from "../components/Pagination";
 import { SearchContext } from "../App";
 import axios from "axios";
+import qs from "qs";
+import { useNavigate } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
-import { setCategoryId } from "../redux/slices/filterSlice";
+import {
+  setCategoryId,
+  setCurrentPage,
+  setFilters
+} from "../redux/slices/filterSlice";
 
 const Home = () => {
-  const { categoryId, sort: sortType } = useSelector((state) => state.filter);
+  const isMounted = useRef(false);
+  const isSearch = useRef(false);
+  const navigate = useNavigate();
+  const { categoryId, sort: sortType, currentPage } = useSelector(
+    (state) => state.filter
+  );
   const dispath = useDispatch();
 
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
 
   const { searchValue } = useContext(SearchContext);
   const search = searchValue ? `&search=${searchValue}` : "";
@@ -25,7 +35,11 @@ const Home = () => {
     dispath(setCategoryId(id));
   };
 
-  useEffect(() => {
+  const onChangePage = (number) => {
+    dispath(setCurrentPage(number));
+  };
+
+  const fetchPizzas = () => {
     setIsLoading(true);
     axios
       .get(
@@ -37,7 +51,44 @@ const Home = () => {
         setItems(res.data);
         setIsLoading(false);
       });
+  };
+
+  //если изменили параметры и был первый рендер
+  useEffect(() => {
+    if (isMounted.current) {
+      const queryString = qs.stringify({
+        sortProperty: sortType.sortProperty,
+        categoryId,
+        currentPage
+      });
+      navigate(`?${queryString}`);
+    }
+    isMounted.current = true;
+  }, [categoryId, sortType, currentPage]);
+
+  //если был первый рендер, то проверяем параметры и сохраняем в redux
+  useEffect(() => {
+    if (window.location.search) {
+      const params = qs.parse(window.location.search.substring(1));
+      const sort = sortList.find(
+        (obj) => obj.sortProperty === params.sortProperty
+      );
+      dispath(
+        setFilters({
+          ...params,
+          sort
+        })
+      );
+      isSearch.current = true;
+    }
+  }, []);
+  //если был первый рендер, то запрашивать пиццы
+  useEffect(() => {
     window.scrollTo(0, 0);
+    if (!isSearch.current) {
+      fetchPizzas();
+    }
+    isSearch.current = false;
   }, [categoryId, sortType, searchValue, currentPage]);
 
   /* Фильтрация по существующему массиву
@@ -61,7 +112,10 @@ const Home = () => {
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">{isLoading ? skeletons : pizzas}</div>
-      <Pagination onChangePage={(number) => setCurrentPage(number)} />
+      <Pagination
+        currentPage={currentPage}
+        onChangePage={(number) => onChangePage(number)}
+      />
     </div>
   );
 };
