@@ -39,9 +39,9 @@ const Home = () => {
     dispath(setCurrentPage(number));
   };
 
-  const fetchPizzas = () => {
+  const fetchPizzas = async () => {
     setIsLoading(true);
-    axios
+    /*await axios
       .get(
         `https://63082d44722029d9ddc94328.mockapi.io/items?page=${currentPage}&limit=4&${
           categoryId > 0 ? `category=${categoryId}` : ``
@@ -50,7 +50,14 @@ const Home = () => {
       .then((res) => {
         setItems(res.data);
         setIsLoading(false);
-      });
+      });*/
+    const res = await axios.get(
+      `https://63082d44722029d9ddc94328.mockapi.io/items?page=${currentPage}&limit=4&${
+        categoryId > 0 ? `category=${categoryId}` : ``
+      }&sortBy=${sortType.sortProperty}&order=${sortType.sort}${search}`
+    );
+    setItems(res.data);
+    setIsLoading(false);
   };
 
   //если изменили параметры и был первый рендер
