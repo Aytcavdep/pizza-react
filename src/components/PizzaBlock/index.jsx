@@ -1,14 +1,12 @@
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addItem } from "../../redux/slices/cartSlice";
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addItem, selectItemById } from '../../redux/slices/cartSlice';
 
-const typeNames = ["тонкое", "традиционное"];
+const typeNames = ['тонкое', 'традиционное'];
 
 const PizzaBlock = ({ id, title, price, imageUrl, sizes, types }) => {
   const dispatch = useDispatch();
-  const cartItem = useSelector((state) =>
-    state.cart.items.find((obj) => obj.id === id)
-  );
+  const cartItem = useSelector(selectItemById(id));
   const [activeType, setActiveType] = useState(0);
   const [activeSize, setActiveSize] = useState(0);
 
@@ -21,7 +19,7 @@ const PizzaBlock = ({ id, title, price, imageUrl, sizes, types }) => {
       price,
       imageUrl,
       type: typeNames[activeType],
-      size: sizes[activeSize]
+      size: sizes[activeSize],
     };
     dispatch(addItem(item));
   };
@@ -36,9 +34,9 @@ const PizzaBlock = ({ id, title, price, imageUrl, sizes, types }) => {
             <li
               key={type}
               onClick={() => setActiveType(type)}
-              className={activeType === type ? "active" : ""}
+              className={activeType === type ? 'active' : ''}
             >
-              {type === 0 ? "тонкое" : "традиционное"}
+              {type === 0 ? 'тонкое' : 'традиционное'}
             </li>
           ))}
         </ul>
@@ -47,7 +45,7 @@ const PizzaBlock = ({ id, title, price, imageUrl, sizes, types }) => {
             <li
               key={index}
               onClick={() => setActiveSize(index)}
-              className={activeSize === index ? "active" : ""}
+              className={activeSize === index ? 'active' : ''}
             >
               {size} см.
             </li>
