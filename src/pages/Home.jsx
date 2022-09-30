@@ -1,10 +1,10 @@
 import Categories from '../components/Categories';
 import Sort, { sortList } from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
-import { useEffect, useContext, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import Pagination from '../components/Pagination';
-import { SearchContext } from '../App';
+
 import qs from 'qs';
 import { useNavigate } from 'react-router-dom';
 
@@ -21,12 +21,16 @@ const Home = () => {
   const isMounted = useRef(false);
   const isSearch = useRef(false);
   const navigate = useNavigate();
-  const { categoryId, sort: sortType, currentPage } = useSelector(selectFilter);
+  const {
+    categoryId,
+    sort: sortType,
+    currentPage,
+    searchValue,
+  } = useSelector(selectFilter);
   const dispath = useDispatch();
 
   const { items, status } = useSelector(selectPizzaData);
 
-  const { searchValue } = useContext(SearchContext);
   const search = searchValue ? `&search=${searchValue}` : '';
 
   const onChangeCategory = (id) => {
