@@ -1,37 +1,35 @@
-import Categories from '../components/Categories';
-import Sort, { sortList } from '../components/Sort';
-import PizzaBlock from '../components/PizzaBlock';
-import React, { useEffect, useRef } from 'react';
-import Skeleton from '../components/PizzaBlock/Skeleton';
-import Pagination from '../components/Pagination';
+import Categories from "../components/Categories";
+import Sort, { sortList } from "../components/Sort";
+import PizzaBlock from "../components/PizzaBlock";
+import React, { useEffect, useRef } from "react";
+import Skeleton from "../components/PizzaBlock/Skeleton";
+import Pagination from "../components/Pagination";
 
-import qs from 'qs';
-import { useNavigate } from 'react-router-dom';
+import qs from "qs";
+import { useNavigate } from "react-router-dom";
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 import {
   selectFilter,
   setCategoryId,
   setCurrentPage,
-  setFilters,
-} from '../redux/slices/filterSlice';
-import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzaSlice';
+  setFilters
+} from "../redux/slices/filterSlice";
+import { fetchPizzas, selectPizzaData } from "../redux/slices/pizzaSlice";
+import { useAppDispatch } from "../redux/store";
 
 const Home: React.FC = () => {
   const isMounted = useRef(false);
   const isSearch = useRef(false);
   const navigate = useNavigate();
-  const {
-    categoryId,
-    sort: sortType,
-    currentPage,
-    searchValue,
-  } = useSelector(selectFilter);
-  const dispath = useDispatch();
+  const { categoryId, sort: sortBy, currentPage, searchValue } = useSelector(
+    selectFilter
+  );
+  const dispath = useAppDispatch();
 
   const { items, status } = useSelector(selectPizzaData);
 
-  const search = searchValue ? `&search=${searchValue}` : '';
+  const search = searchValue ? `&search=${searchValue}` : "";
 
   const onChangeCategory = (idx: number) => {
     dispath(setCategoryId(idx));
@@ -45,26 +43,26 @@ const Home: React.FC = () => {
   useEffect(() => {
     if (isMounted.current) {
       const queryString = qs.stringify({
-        sortProperty: sortType.sortProperty,
+        sortProperty: sortBy.sortProperty,
         categoryId,
-        currentPage,
+        currentPage
       });
       navigate(`?${queryString}`);
     }
     isMounted.current = true;
-  }, [categoryId, sortType, currentPage]);
+  }, [categoryId, sortBy, currentPage]);
 
   //если был первый рендер, то проверяем параметры и сохраняем в redux
   useEffect(() => {
     if (window.location.search) {
       const params = qs.parse(window.location.search.substring(1));
-      const sort = sortList.find(
-        (obj) => obj.sortProperty === params.sortProperty
-      );
+      const sort =
+        sortList.find((obj) => obj.sortProperty === params.sortProperty) ||
+        sortList[0];
       dispath(
         setFilters({
           ...params,
-          sort,
+          sort
         })
       );
       isSearch.current = true;
@@ -76,11 +74,11 @@ const Home: React.FC = () => {
     if (!isSearch.current) {
       dispath(
         //@ts-ignore
-        fetchPizzas({ search, categoryId, currentPage, sortType })
+        fetchPizzas({ search, categoryId, currentPage, sortBy })
       );
     }
     isSearch.current = false;
-  }, [categoryId, sortType, searchValue, currentPage]);
+  }, [categoryId, sortBy, searchValue, currentPage]);
 
   /* Фильтрация по существующему массиву
   const pizzas = items.filter((obj) =>
@@ -102,7 +100,7 @@ const Home: React.FC = () => {
         <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
-      {status === 'error' ? (
+      {status === "error" ? (
         <div className="content_error-info">
           <h2>
             Произошла ошибка <span>😕</span>
@@ -114,7 +112,7 @@ const Home: React.FC = () => {
         </div>
       ) : (
         <div className="content__items">
-          {status === 'loading' ? skeletons : pizzas}
+          {status === "loading" ? skeletons : pizzas}
         </div>
       )}
       <Pagination

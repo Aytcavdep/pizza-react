@@ -1,8 +1,13 @@
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { addItem, selectItemById } from '../../redux/slices/cartSlice';
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import {
+  addItem,
+  CartItem,
+  selectItemById
+} from "../../redux/slices/cartSlice";
 
-const typeNames = ['тонкое', 'традиционное'];
+const typeNames = ["тонкое", "традиционное"];
 
 type PizzaBlockProps = {
   id: string;
@@ -19,7 +24,7 @@ const PizzaBlock: React.FC<PizzaBlockProps> = ({
   price,
   imageUrl,
   sizes,
-  types,
+  types
 }) => {
   const dispatch = useDispatch();
   const cartItem = useSelector(selectItemById(id));
@@ -29,30 +34,33 @@ const PizzaBlock: React.FC<PizzaBlockProps> = ({
   const addedCount = cartItem ? cartItem.count : 0;
 
   const onClickAdd = () => {
-    const item = {
+    const item: CartItem = {
       id,
       title,
       price,
       imageUrl,
       type: typeNames[activeType],
       size: sizes[activeSize],
+      count: 0
     };
     dispatch(addItem(item));
   };
 
   return (
     <div className="pizza-block">
-      <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
-      <h4 className="pizza-block__title">{title}</h4>
+      <Link key={id} to={`/pizza/${id}`}>
+        <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
+        <h4 className="pizza-block__title">{title}</h4>
+      </Link>
       <div className="pizza-block__selector">
         <ul>
           {types.map((type) => (
             <li
               key={type}
               onClick={() => setActiveType(type)}
-              className={activeType === type ? 'active' : ''}
+              className={activeType === type ? "active" : ""}
             >
-              {type === 0 ? 'тонкое' : 'традиционное'}
+              {type === 0 ? "тонкое" : "традиционное"}
             </li>
           ))}
         </ul>
@@ -61,7 +69,7 @@ const PizzaBlock: React.FC<PizzaBlockProps> = ({
             <li
               key={index}
               onClick={() => setActiveSize(index)}
-              className={activeSize === index ? 'active' : ''}
+              className={activeSize === index ? "active" : ""}
             >
               {size} см.
             </li>

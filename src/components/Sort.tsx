@@ -1,22 +1,54 @@
-import { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectSort, setSort } from '../redux/slices/filterSlice';
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectSort,
+  setSort,
+  SortEnum,
+  SortPropertyEnum
+} from "../redux/slices/filterSlice";
 
 type SortItem = {
   name: string;
-  sortProperty: string;
-  sort: string;
+  sortProperty: SortPropertyEnum;
+  sort: SortEnum;
+};
+type PopupClick = MouseEvent & {
+  path: Node[];
 };
 export const sortList: SortItem[] = [
-  { name: 'популярности (убыв.)', sortProperty: 'rating', sort: 'desc' },
-  { name: 'популярности (возр.)', sortProperty: 'rating', sort: 'asc' },
-  { name: 'цене (убыв.)', sortProperty: 'price', sort: 'desc' },
-  { name: 'цене (возр.)', sortProperty: 'price', sort: 'asc' },
-  { name: 'алфавиту (убыв.)', sortProperty: 'title', sort: 'desc' },
-  { name: 'алфавиту (возр.)', sortProperty: 'title', sort: 'asc' },
+  {
+    name: "популярности (убыв.)",
+    sortProperty: SortPropertyEnum.RATING,
+    sort: SortEnum.DESC
+  },
+  {
+    name: "популярности (возр.)",
+    sortProperty: SortPropertyEnum.RATING,
+    sort: SortEnum.ASC
+  },
+  {
+    name: "цене (убыв.)",
+    sortProperty: SortPropertyEnum.PRICE,
+    sort: SortEnum.DESC
+  },
+  {
+    name: "цене (возр.)",
+    sortProperty: SortPropertyEnum.PRICE,
+    sort: SortEnum.ASC
+  },
+  {
+    name: "алфавиту (убыв.)",
+    sortProperty: SortPropertyEnum.TITLE,
+    sort: SortEnum.DESC
+  },
+  {
+    name: "алфавиту (возр.)",
+    sortProperty: SortPropertyEnum.TITLE,
+    sort: SortEnum.ASC
+  }
 ];
 
-const Sort = () => {
+const SortPoupup = () => {
   const dispath = useDispatch();
   const sort = useSelector(selectSort);
   const [isOpenPopup, setISOpenPopup] = useState(false);
@@ -27,14 +59,16 @@ const Sort = () => {
     setISOpenPopup(false);
   };
   useEffect(() => {
-    const hsndleClickoutside = (event: any) => {
-      if (!event.path.includes(sortRef.current)) {
+    const hsndleClickoutside = (event: MouseEvent) => {
+      const _event = event as PopupClick;
+
+      if (sortRef.current && !_event.path.includes(sortRef.current)) {
         setISOpenPopup(false);
       }
     };
 
-    document.body.addEventListener('click', hsndleClickoutside);
-    return () => document.body.removeEventListener('click', hsndleClickoutside);
+    document.body.addEventListener("click", hsndleClickoutside);
+    return () => document.body.removeEventListener("click", hsndleClickoutside);
   }, []);
 
   return (
@@ -62,7 +96,7 @@ const Sort = () => {
               <li
                 key={index}
                 onClick={() => changeActiveSort(obj)}
-                className={sort.name === obj.sortProperty ? 'active' : ''}
+                className={sort.name === obj.sortProperty ? "active" : ""}
               >
                 {obj.name}
               </li>
@@ -74,4 +108,4 @@ const Sort = () => {
   );
 };
 
-export default Sort;
+export default SortPoupup;
