@@ -1,7 +1,7 @@
 import Categories from "../components/Categories";
 import Sort, { sortList } from "../components/Sort";
 import PizzaBlock from "../components/PizzaBlock";
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import Skeleton from "../components/PizzaBlock/Skeleton";
 import Pagination from "../components/Pagination";
 
@@ -31,9 +31,9 @@ const Home: React.FC = () => {
 
   const search = searchValue ? `&search=${searchValue}` : "";
 
-  const onChangeCategory = (idx: number) => {
+  const onChangeCategory = useCallback((idx: number) => {
     dispath(setCategoryId(idx));
-  };
+  }, []);
 
   const onChangePage = (page: number) => {
     dispath(setCurrentPage(page));
@@ -97,7 +97,7 @@ const Home: React.FC = () => {
     <div className="container">
       <div className="content__top">
         <Categories value={categoryId} onChangeCategory={onChangeCategory} />
-        <Sort />
+        <Sort value={sortBy} />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       {status === "error" ? (
