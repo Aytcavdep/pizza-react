@@ -1,11 +1,11 @@
 export enum SortPropertyEnum {
-  RATING = "rating",
-  PRICE = "price",
-  TITLE = "title"
+  RATING = 'rating',
+  PRICE = 'price',
+  TITLE = 'title',
 }
 export enum SortEnum {
-  DESC = "desc",
-  ASC = "asc"
+  DESC = 'desc',
+  ASC = 'asc',
 }
 
 export type Sort = {
