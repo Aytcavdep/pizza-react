@@ -1,14 +1,15 @@
-import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import CartItem from '../components/CartItem';
-import { clearItems, selectCart } from '../redux/slices/cartSlice';
-import CartEmpty from '../components/CartEmpty';
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import CartItem from "../components/CartItem";
+import { clearItems } from "../redux/cart/slice";
+import { selectCart } from "../redux/cart/selectors";
+import CartEmpty from "../components/CartEmpty";
 
 const Cart: React.FC = () => {
   const dispatch = useDispatch();
   const { totalPrice, items } = useSelector(selectCart);
   const onClickClear = () => {
-    if (window.confirm('Очистить корзину ?')) {
+    if (window.confirm("Очистить корзину ?")) {
       dispatch(clearItems());
     }
   };
@@ -106,12 +107,12 @@ const Cart: React.FC = () => {
         <div className="cart__bottom">
           <div className="cart__bottom-details">
             <span>
-              {' '}
-              Всего пицц: <b>{totalCount} шт.</b>{' '}
+              {" "}
+              Всего пицц: <b>{totalCount} шт.</b>{" "}
             </span>
             <span>
-              {' '}
-              Сумма заказа: <b>{totalPrice} ₽</b>{' '}
+              {" "}
+              Сумма заказа: <b>{totalPrice} ₽</b>{" "}
             </span>
           </div>
           <div className="cart__bottom-buttons">
