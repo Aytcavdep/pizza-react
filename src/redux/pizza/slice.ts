@@ -27,21 +27,6 @@ export const pizzaSlice = createSlice({
       state.items = [];
     });
   }
-
-  /*extraReducers: {
-    [fetchPizzas.pending]: (state, action) => {
-      state.items = [];
-      state.status = "loading";
-    },
-    [fetchPizzas.fulfilled]: (state, action) => {
-      state.items = action.payload;
-      state.status = "success";
-    },
-    [fetchPizzas.rejected]: (state, action) => {
-      state.status = "error";
-      state.items = [];
-    }
-  }*/
 });
 
 export const { setItems } = pizzaSlice.actions;
